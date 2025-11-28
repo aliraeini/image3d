@@ -21,8 +21,20 @@ def tests(session: nox.Session) -> None:
     """
     Run the unit and regular tests.
     """
+    session.install("numpy")
     session.install(".[test]")
     session.run("pytest", *session.posargs)
+
+
+@nox.session(reuse_venv=True, default=False)
+def build(session: nox.Session) -> None:
+    """
+    Build SDist and wheel.
+    """
+
+    session.install("build")
+    session.log("Building normal files")
+    session.run("python", "-m", "build", *session.posargs)
 
 
 @nox.session(venv_backend="none")

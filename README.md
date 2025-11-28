@@ -1,4 +1,4 @@
-# scikit_build_example
+# voxlib
 
 [![Gitter][gitter-badge]][gitter-link]
 
@@ -12,27 +12,27 @@ An example project built with [pybind11][] and [scikit-build-core][]. Python
 3.9+ (see older commits for 3.7+, or even older versions of Python using [scikit-build (classic)][]).
 
 
-[gitter-badge]:            https://badges.gitter.im/pybind/Lobby.svg
-[gitter-link]:             https://gitter.im/pybind/Lobby
-[actions-badge]:           https://github.com/pybind/scikit_build_example/workflows/Tests/badge.svg
-[actions-conda-link]:      https://github.com/pybind/scikit_build_example/actions?query=workflow%3AConda
-[actions-conda-badge]:     https://github.com/pybind/scikit_build_example/workflows/Conda/badge.svg
-[actions-pip-link]:        https://github.com/pybind/scikit_build_example/actions?query=workflow%3APip
-[actions-pip-badge]:       https://github.com/pybind/scikit_build_example/workflows/Pip/badge.svg
-[actions-wheels-link]:     https://github.com/pybind/scikit_build_example/actions?query=workflow%3AWheels
-[actions-wheels-badge]:    https://github.com/pybind/scikit_build_example/workflows/Wheels/badge.svg
+[gitter-badge]:            https://badges.gitter.im/aliraeini/Lobby.svg
+[gitter-link]:             https://gitter.im/aliraeini/Lobby
+[actions-badge]:           https://github.com/aliraeini/voxlib/workflows/Tests/badge.svg
+[actions-conda-link]:      https://github.com/aliraeini/voxlib/actions?query=workflow%3AConda
+[actions-conda-badge]:     https://github.com/aliraeini/voxlib/workflows/Conda/badge.svg
+[actions-pip-link]:        https://github.com/aliraeini/voxlib/actions?query=workflow%3APip
+[actions-pip-badge]:       https://github.com/aliraeini/voxlib/workflows/Pip/badge.svg
+[actions-wheels-link]:     https://github.com/aliraeini/voxlib/actions?query=workflow%3AWheels
+[actions-wheels-badge]:    https://github.com/aliraeini/voxlib/workflows/Wheels/badge.svg
 
 ## Installation
 
 - Clone this repository
-- `pip install ./scikit_build_example`
+- `pip install ./voxlib`
 
 ## Test call
 
 ```python
-import scikit_build_example
+import voxlib
 
-scikit_build_example.add(1, 2)
+voxlib.add(1, 2)
 ```
 
 ## Files
@@ -43,7 +43,8 @@ necessary. The necessary files are:
 * `pyproject.toml`: The Python project file
 * `CMakeLists.txt`: The CMake configuration file
 * `src/main.cpp`: The source file for the C++ build
-* `src/scikit_build_example/__init__.py`: The Python portion of the module. The root of the module needs to be `<package_name>`, `src/<package_name>`, or `python/<package_name>` to be auto-discovered.
+* `src/voxlib/__init__.py`: The Python portion of the module.
+  The root of the module needs to be `<package_name>`, `src/<package_name>`, or `python/<package_name>` to be auto-discovered.
 
 These files are also expected and highly recommended:
 

@@ -1,6 +1,6 @@
 # Require CMake 3.15+ (matching scikit-build-core) Use new versions of all
 # policies up to CMake 3.27
-cmake_minimum_required(VERSION 3.15...3.27)
+cmake_minimum_required(VERSION 3.27)
 
 # Scikit-build-core sets these values for you, or you can just hard-code the
 # name and version.
@@ -12,15 +12,40 @@ project(
 # Find the module development requirements (requires FindPython from 3.17 or
 # scikit-build-core's built-in backport)
 find_package(Python REQUIRED COMPONENTS Interpreter Development.Module)
-find_package(pybind11 CONFIG REQUIRED)
 
-# Add a library using FindPython's tooling (pybind11 also provides a helper like
-# this)
-python_add_library(_core MODULE src/main.cpp WITH_SOABI)
-target_link_libraries(_core PRIVATE pybind11::headers)
+# Add a library using FindPython's tooling (pybind11 also provides a helper like this)
+file(GLOB PyBind_SRCS CONFIGURE_DEPENDS "src/*.cpp")
+set(VOXLIB_SRC 
+   porescale/voxlib/voxelImage.cpp
+   porescale/voxlib/vxlPro2.cpp
+   porescale/voxlib/voxelGrad.cpp
+   porescale/voxlib/vxlPro1.cpp
+   porescale/voxlib/vxlPro.cpp
+   porescale/voxlib/VxlStrips.cpp
+)
+python_add_library(_core MODULE ${VOXLIB_SRC} ${PyBind_SRCS} WITH_SOABI)
+target_compile_definitions(_core PRIVATE
+    SVG
+    LPNG
+    DUMMY=1
+)
+# find_package(pybind11 CONFIG REQUIRED PATHS ./build)
+# target_link_libraries(_core PRIVATE pybind11::headers)
+target_include_directories(_core PRIVATE pybind11/include)
+
+target_include_directories(_core PRIVATE porescale/include)
+target_include_directories(_core PRIVATE porescale/voxlib)
+target_include_directories(_core PRIVATE porescale/optim)
+target_include_directories(_core PRIVATE porescale/primitives)
+target_include_directories(_core PRIVATE porescale/svplot)
 
 # This is passing in the version as a define just as an example
 target_compile_definitions(_core PRIVATE VERSION_INFO=${PROJECT_VERSION})
+set_property(TARGET _core PROPERTY CXX_STANDARD 23)
+# Toolset: gcc-linux:
+set(CMAKE_CXX_FLAGS_INIT "-Werror -Wall -Wextra -Wpedantic")
+target_link_options(_core PRIVATE "-Wl,-z,defs")
+target_link_libraries(_core PRIVATE  python3.12)
 
 # The install directory is the output (wheel) directory
-install(TARGETS _core DESTINATION scikit_build_example)
+install(TARGETS _core DESTINATION voxlib)

@@ -4,7 +4,7 @@ build-backend = "scikit_build_core.build"
 
 
 [project]
-name = "scikit_build_example"
+name = "voxlib"
 version = "0.0.1"
 description="A minimal example package (with pybind11)"
 readme = "README.md"
@@ -16,7 +16,6 @@ classifiers = [
   "Development Status :: 4 - Beta",
   "License :: OSI Approved :: MIT License",
   "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.7",
   "Programming Language :: Python :: 3.8",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
