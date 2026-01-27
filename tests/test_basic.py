@@ -10,12 +10,9 @@ def test_version():
     assert vx.__version__ == "0.0.1"
 
 def test_voxlibI():
-    numpy_array = np.ones((3, 3, 3))
-    print(numpy_array)
     img = vx.VxlImgU8((20, 20, 1), 22)
-    print(img.data())
 
-    assert np.array(img, copy = False)[0,0,0] == 22
+    assert np.array(img, copy=False)[0,0,0] == 22
     assert vx.VxlImgU8((20, 20, 1), 22).data()[0,0,0] == 22
 
 def test_writePng():

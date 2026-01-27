@@ -1,8 +1,5 @@
-build:
-	#pip install nox
+build_update:
 	nox -s build
-
-build_pyi:
 	pip install .
 	pybind11-stubgen voxlib --output-dir src
 
