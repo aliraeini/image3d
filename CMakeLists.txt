@@ -48,7 +48,7 @@ set(CMAKE_CXX_FLAGS_INIT "-Werror -Wall -Wextra -Wpedantic")
 target_link_libraries(_core PRIVATE Python::Module)
 
 # The install directory is the output (wheel) directory
-install(TARGETS _core DESTINATION voxlib)
+install(TARGETS _core DESTINATION image3d)
 
 
 # Add targets for local includes to ensure they appear in compile_commands.json

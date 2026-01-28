@@ -1,7 +1,7 @@
 build_update:
 	nox -s build
 	pip install .
-	pybind11-stubgen voxlib --output-dir src
+	pybind11-stubgen image3d --output-dir src
 
 install:
 	pip install .
