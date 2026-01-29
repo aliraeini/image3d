@@ -1,5 +1,5 @@
 build_update:
-	nox -s build
+	# nox -s build
 	pip install .
 	pybind11-stubgen image3d --output-dir src
 
