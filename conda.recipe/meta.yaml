@@ -1,5 +1,5 @@
 package:
-  name: voxlib
+  name: image3d
   version: 0.0.1
 
 source:
@@ -30,7 +30,7 @@ requirements:
 
 test:
   imports:
-    - voxlib
+    - image3d
   requires:
     - pytest
   source_files:
