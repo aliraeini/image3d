@@ -11,6 +11,11 @@ project(
 
 # Find the module development requirements (requires FindPython from 3.17 or
 # scikit-build-core's built-in backport)
+
+if(MSVC)
+  add_compile_definitions(NOMINMAX)
+endif()
+
 find_package(Python REQUIRED COMPONENTS Interpreter Development.Module)
 include(FetchContent)
 
