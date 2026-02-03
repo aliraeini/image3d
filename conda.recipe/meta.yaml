@@ -33,6 +33,7 @@ test:
     - image3d
   requires:
     - pytest
+    - numpy
   source_files:
     - tests
   commands:
