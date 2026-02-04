@@ -30,7 +30,37 @@ if(NOT ZLIB_FOUND)
   endif()
 endif()
 
-find_package(OpenMP 3.1)
+if(APPLE)
+  if(NOT DEFINED OpenMP_ROOT AND DEFINED ENV{OpenMP_ROOT})
+    set(OpenMP_ROOT $ENV{OpenMP_ROOT})
+  endif()
+  
+  find_package(OpenMP)
+  
+  if(NOT OpenMP_FOUND)
+    # Hint for Homebrew libomp
+    set(OpenMP_CXX_FLAGS -Xpreprocessor -fopenmp)
+    set(OpenMP_CXX_LIB_NAMES "omp")
+    if (EXISTS "${OpenMP_ROOT}/lib/libomp.dylib")
+      set(OpenMP_omp_LIBRARY "${OpenMP_ROOT}/lib/libomp.dylib")
+    elseif(EXISTS "/opt/homebrew/opt/libomp/lib/libomp.dylib")
+       set(OpenMP_omp_LIBRARY "/opt/homebrew/opt/libomp/lib/libomp.dylib")
+    elseif(EXISTS "/usr/local/opt/libomp/lib/libomp.dylib")
+       set(OpenMP_omp_LIBRARY "/usr/local/opt/libomp/lib/libomp.dylib")
+    endif()
+    
+    if (DEFINED OpenMP_omp_LIBRARY)
+       message(STATUS "Manual config for OpenMP: ${OpenMP_omp_LIBRARY}")
+       set(OpenMP_FOUND TRUE)
+       add_library(OpenMP::OpenMP_CXX UNKNOWN IMPORTED)
+       set_target_properties(OpenMP::OpenMP_CXX PROPERTIES
+         IMPORTED_LOCATION "${OpenMP_omp_LIBRARY}"
+         INTERFACE_COMPILE_OPTIONS "${OpenMP_CXX_FLAGS}"
+         INTERFACE_LINK_LIBRARIES "${OpenMP_omp_LIBRARY}"
+       )
+    endif()
+  endif()
+endif()
 
 if(NOT OpenMP_FOUND)
   find_package(OpenMP REQUIRED)

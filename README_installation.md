@@ -3,7 +3,16 @@
 ### macOS
 You need to install `libomp` required by the project:
 ```bash
-brew install libomp
+brew install libomp ninja
+
+# activate a venv: 
+# python -m venv .venv
+# .venv/bin/activate
+pip install --use-feature=in-tree-build .
+
+# to test your installation, run:
+pip install pytest
+python -m pytest
 ```
 
 ### Windows
