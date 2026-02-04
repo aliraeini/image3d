@@ -9,13 +9,6 @@ project(
   VERSION ${SKBUILD_PROJECT_VERSION}
   LANGUAGES CXX)
 
-# Find the module development requirements (requires FindPython from 3.17 or
-# scikit-build-core's built-in backport)
-
-if(MSVC)
-  add_compile_definitions(NOMINMAX)
-endif()
-
 find_package(Python REQUIRED COMPONENTS Interpreter Development.Module)
 include(FetchContent)
 
@@ -37,37 +30,7 @@ if(NOT ZLIB_FOUND)
   endif()
 endif()
 
-if(APPLE)
-  if(NOT DEFINED OpenMP_ROOT AND DEFINED ENV{OpenMP_ROOT})
-    set(OpenMP_ROOT $ENV{OpenMP_ROOT})
-  endif()
-  
-  find_package(OpenMP)
-  
-  if(NOT OpenMP_FOUND)
-    # Hint for Homebrew libomp
-    set(OpenMP_CXX_FLAGS "-Xpreprocessor -fopenmp")
-    set(OpenMP_CXX_LIB_NAMES "omp")
-    if (EXISTS "${OpenMP_ROOT}/lib/libomp.dylib")
-      set(OpenMP_omp_LIBRARY "${OpenMP_ROOT}/lib/libomp.dylib")
-    elseif(EXISTS "/opt/homebrew/opt/libomp/lib/libomp.dylib")
-       set(OpenMP_omp_LIBRARY "/opt/homebrew/opt/libomp/lib/libomp.dylib")
-    elseif(EXISTS "/usr/local/opt/libomp/lib/libomp.dylib")
-       set(OpenMP_omp_LIBRARY "/usr/local/opt/libomp/lib/libomp.dylib")
-    endif()
-    
-    if (DEFINED OpenMP_omp_LIBRARY)
-       message(STATUS "Manual config for OpenMP: ${OpenMP_omp_LIBRARY}")
-       set(OpenMP_FOUND TRUE)
-       add_library(OpenMP::OpenMP_CXX UNKNOWN IMPORTED)
-       set_target_properties(OpenMP::OpenMP_CXX PROPERTIES
-         IMPORTED_LOCATION "${OpenMP_omp_LIBRARY}"
-         INTERFACE_COMPILE_OPTIONS "${OpenMP_CXX_FLAGS}"
-         INTERFACE_LINK_LIBRARIES "${OpenMP_omp_LIBRARY}"
-       )
-    endif()
-  endif()
-endif()
+find_package(OpenMP 3.1)
 
 if(NOT OpenMP_FOUND)
   find_package(OpenMP REQUIRED)
@@ -123,8 +86,23 @@ set_property(TARGET _core PROPERTY CXX_STANDARD 23)
 # Toolset: gcc-linux:
 
 if(MSVC)
-  target_compile_options(_core PRIVATE /W4 /permissive- /openmp:llvm)
+  target_compile_options(_core PRIVATE /openmp:llvm /diagnostics:caret)  # /W4
   target_compile_definitions(_core PRIVATE NOMINMAX)
+
+  # Check if we are using LLVM OpenMP and try to find the DLL to bundle
+  if(OpenMP_CXX_LIB_NAMES MATCHES "libomp")
+    # Try to find the DLL in the same directory as the library
+    get_target_property(OPENMP_LIB_LOC OpenMP::OpenMP_CXX IMPORTED_LOCATION)
+    get_filename_component(OPENMP_LIB_DIR "${OPENMP_LIB_LOC}" DIRECTORY)
+    find_file(OPENMP_DLL libomp.dll PATHS "${OPENMP_LIB_DIR}" "../bin" NO_DEFAULT_PATH)
+
+    if(OPENMP_DLL)
+      message(STATUS "Found OpenMP DLL: ${OPENMP_DLL}")
+      install(FILES ${OPENMP_DLL} DESTINATION image3d)
+    else()
+      message(WARNING "Could not find libomp.dll to bundle. You may need to add it to your path manually.")
+    endif()
+  endif()
 else()
   target_compile_options(_core PRIVATE -Wall -Wextra -Wpedantic)
   # target_compile_options(_core PRIVATE -Werror)
@@ -139,4 +117,3 @@ install(TARGETS _core DESTINATION image3d)
 # Add targets for local includes to ensure they appear in compile_commands.json
 # This fixes tooling errors in headers like typses.h
 add_subdirectory(src/_include)
-
