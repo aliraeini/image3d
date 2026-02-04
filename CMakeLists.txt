@@ -119,20 +119,19 @@ if(MSVC)
   target_compile_options(_core PRIVATE /openmp:llvm /diagnostics:caret)  # /W4
   target_compile_definitions(_core PRIVATE NOMINMAX)
 
-  # Check if we are using LLVM OpenMP and try to find the DLL to bundle
-  if(OpenMP_CXX_LIB_NAMES MATCHES "libomp")
-    # Try to find the DLL in the same directory as the library
-    get_target_property(OPENMP_LIB_LOC OpenMP::OpenMP_CXX IMPORTED_LOCATION)
-    get_filename_component(OPENMP_LIB_DIR "${OPENMP_LIB_LOC}" DIRECTORY)
-    find_file(OPENMP_DLL libomp.dll PATHS "${OPENMP_LIB_DIR}" "../bin" NO_DEFAULT_PATH)
-
-    if(OPENMP_DLL)
-      message(STATUS "Found OpenMP DLL: ${OPENMP_DLL}")
-      install(FILES ${OPENMP_DLL} DESTINATION image3d)
-    else()
-      message(WARNING "Could not find libomp.dll to bundle. You may need to add it to your path manually.")
-    endif()
-  endif()
+  # this is done via delvewheel now
+  # if(OpenMP_CXX_LIB_NAMES MATCHES "libomp")
+  #   # Try to find the DLL in the same directory as the library
+  #   get_target_property(OPENMP_LIB_LOC OpenMP::OpenMP_CXX IMPORTED_LOCATION)
+  #   get_filename_component(OPENMP_LIB_DIR "${OPENMP_LIB_LOC}" DIRECTORY)
+  #   find_file(OPENMP_DLL libomp.dll PATHS "${OPENMP_LIB_DIR}" "../bin" NO_DEFAULT_PATH)
+  #   if(OPENMP_DLL)
+  #     message(STATUS "Found OpenMP DLL: ${OPENMP_DLL}")
+  #     install(FILES ${OPENMP_DLL} DESTINATION image3d)
+  #   else()
+  #     message(WARNING "Could not find libomp.dll to bundle. You may need to add it to your path manually.")
+  #   endif()
+  # endif()
 else()
   target_compile_options(_core PRIVATE -Wall -Wextra -Wpedantic)
   # target_compile_options(_core PRIVATE -Werror)

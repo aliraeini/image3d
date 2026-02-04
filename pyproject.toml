@@ -52,6 +52,10 @@ build-frontend = "build[uv]"
 test-command = "pytest {project}/tests"
 test-extras = ["test"]
 
+[tool.cibuildwheel.windows]
+before-build = "pip install delvewheel"
+repair-wheel-command = "delvewheel repair -v -w {dest_dir} {wheel}"
+
 [tool.cibuildwheel.pyodide]
 build-frontend = {name = "build", args = ["--exports", "whole_archive"]}
 
