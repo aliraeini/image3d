@@ -1,4 +1,6 @@
-## Image3d
+# Archived: see [image3kit](https://github.com/image3kit/image3kit) instead
+
+## Image3d 
 
 **EXPERIMENTAL: not ready for public use**
 
